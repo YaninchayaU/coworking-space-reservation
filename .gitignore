@@ -1,4 +1,4 @@
 #ignore all node_modules
-consr-server/node_modules/*
+*/node_modules/*
 #ignore config file
-consr-server/config/config.env
+*/config/config.env
