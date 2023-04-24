@@ -5,9 +5,9 @@ const CoworkingSpace = require("../models/CoworkingSpace");
 exports.getCoworkingSpaces = async (req, res, next) => {
   try {
     const coSpaces = await CoworkingSpace.find();
-    res.status(200).json({ sucess: true, data: coSpaces });
+    res.status(200).json({ success: true, data: coSpaces });
   } catch (err) {
-    res.status(400).json({ succes: false, msg: `${err}` });
+    res.status(400).json({ success: false, msg: `${err}` });
   }
 };
 
@@ -21,7 +21,7 @@ exports.getCoworkingSpace = async (req, res, next) => {
     if (!coSpace) {
       return res.status(400).json({ success: false });
     }
-    res.status(200).json({ sucess: true, data: coSpace });
+    res.status(200).json({ success: true, data: coSpace });
   } catch (err) {
     res.status(400).json({ success: false, msg: `${err}` });
   }

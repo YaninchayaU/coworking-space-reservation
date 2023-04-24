@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 //Load env vars
 dotenv.config({ path: "./config/config.env" });
@@ -12,6 +13,9 @@ const auth = require("./routes/auth");
 const app = express();
 
 //Body parser
+app.use(express.json());
+
+//Cookie parser
 app.use(express.json());
 
 //Mount routers
