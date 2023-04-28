@@ -7,12 +7,12 @@ exports.getReservations = async (req, res, next) => {
   let query;
   if (req.user.role !== "admin") {
     query = Reservation.find({ user: req.user.id }).populate({
-      path: "coworkingspace",
+      path: "coworkingSpace",
       select: "name address",
     });
   } else {
     query = Reservation.find().populate({
-      path: "coworkingspace",
+      path: "coworkingSpace",
       select: "name address",
     });
   }
