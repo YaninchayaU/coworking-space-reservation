@@ -6,9 +6,15 @@ const Reservation = require("../models/Reservation");
 exports.getReservations = async (req, res, next) => {
   let query;
   if (req.user.role !== "admin") {
-    query = Reservation.find({ user: req.user.id });
+    query = Reservation.find({ user: req.user.id }).populate({
+      path: "coworkingspace",
+      select: "name address",
+    });
   } else {
-    query = Reservation.find();
+    query = Reservation.find().populate({
+      path: "coworkingspace",
+      select: "name address",
+    });
   }
   try {
     const reservations = await query;
