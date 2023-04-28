@@ -22,7 +22,7 @@ exports.getCoworkingSpaces = async (req, res, next) => {
       (match) => `$${match}`
     );
 
-    query = CoworkingSpace.find(JSON.parse(queryStr));
+    query = CoworkingSpace.find(JSON.parse(queryStr)).populate("reservations");
 
     //Select Fields
     if (req.query.select) {
@@ -65,14 +65,12 @@ exports.getCoworkingSpaces = async (req, res, next) => {
       };
     }
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        count: coSpaces.length,
-        pagination,
-        data: coSpaces,
-      });
+    res.status(200).json({
+      success: true,
+      count: coSpaces.length,
+      pagination,
+      data: coSpaces,
+    });
   } catch (err) {
     res.status(400).json({ success: false, msg: `${err}` });
   }
