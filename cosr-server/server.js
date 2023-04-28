@@ -8,10 +8,10 @@ dotenv.config({ path: "./config/config.env" });
 //Connect to database
 connectDB();
 //Route files
-const reservations = require("./routes/CoworkingSpaces");
+const coworkingSpaces = require("./routes/CoworkingSpaces");
 const auth = require("./routes/auth");
 const app = express();
-
+const reservations = require("./routes/reservations");
 //Body parser
 app.use(express.json());
 
@@ -19,7 +19,8 @@ app.use(express.json());
 app.use(express.json());
 
 //Mount routers
-app.use("/cosr/api/CoworkingSpaces", reservations);
+app.use("/cosr/api/CoworkingSpaces", coworkingSpaces);
+app.use("/cosr/api/reservations", reservations);
 app.use("/cosr/api/auth", auth);
 const PORT = process.env.PORT || 5002;
 

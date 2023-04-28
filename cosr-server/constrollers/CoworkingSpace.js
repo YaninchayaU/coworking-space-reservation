@@ -4,8 +4,75 @@ const CoworkingSpace = require("../models/CoworkingSpace");
 //@access   Public
 exports.getCoworkingSpaces = async (req, res, next) => {
   try {
-    const coSpaces = await CoworkingSpace.find();
-    res.status(200).json({ success: true, data: coSpaces });
+    let query;
+
+    //Copy req.query
+    const reqQuery = { ...req.query };
+
+    //Fields to exclude
+    const removeFields = ["select", "sort", "page", "limit"];
+
+    //Loop over remove fields and delete them from reqQuery
+    removeFields.forEach((param) => delete reqQuery[param]);
+    console.log(reqQuery);
+
+    let queryStr = JSON.stringify(req.query);
+    queryStr = queryStr.replace(
+      /\b(gt|gte|lt|lte|in)\b/g,
+      (match) => `$${match}`
+    );
+
+    query = CoworkingSpace.find(JSON.parse(queryStr));
+
+    //Select Fields
+    if (req.query.select) {
+      const fields = req.query.select.split(",").join(" ");
+      query = query.select(fields);
+    }
+    //Sort
+    if (req.query.sort) {
+      const sortBy = req.query.sort.split(",").join(" ");
+      query = query.sort(sortBy);
+    } else {
+      query = query.sort("-createdAt");
+    }
+
+    //Pagination
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 25;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const total = await CoworkingSpace.countDocuments();
+
+    query = query.skip(startIndex).limit(limit);
+
+    const coSpaces = await query;
+
+    //Pagination result
+    const pagination = {};
+
+    if (endIndex < total) {
+      pagination.next = {
+        page: page + 1,
+        limit,
+      };
+    }
+
+    if (startIndex > 0) {
+      pagination.prev = {
+        page: page - 1,
+        limit,
+      };
+    }
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        count: coSpaces.length,
+        pagination,
+        data: coSpaces,
+      });
   } catch (err) {
     res.status(400).json({ success: false, msg: `${err}` });
   }
