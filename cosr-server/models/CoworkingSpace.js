@@ -18,6 +18,7 @@ const CoworkingSpaceSchema = new mongoose.Schema(
       type: String,
       required: ["true", "Please add a telephone number"],
     },
+
     openTime: {
       type: String,
       required: ["true", "Please add open time"],
