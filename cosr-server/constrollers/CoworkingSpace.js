@@ -131,21 +131,17 @@ exports.updateCoworkingSpace = async (req, res, next) => {
 //@access   Public
 exports.deleteCoworkingSpace = async (req, res, next) => {
   try {
-    console(req.params.id, "-----req-----");
-    const coSpace = await CoworkingSpace.findById(req.params.id);
-    console(coSpace, "----------------");
-
+    const coSpace = await CoworkingSpace.findOne({ _id: req.params.id });
     if (!coSpace)
       return res.status(404).json({
         success: false,
         message: `Bootcamp not found with id of ${req.params.id}`,
       });
 
-    console(coSpace, "-----co------");
-    coSpace.remove();
-    console(coSpace, "-----af re------");
+    coSpace.deleteOne();
     res.status(200).json({ success: true, data: {} });
   } catch (err) {
-    res.status(400).json({ success: false });
+    console.log(err);
+    res.status(400).json({ success: false, data: err.message });
   }
 };
