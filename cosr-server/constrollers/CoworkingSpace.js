@@ -82,6 +82,7 @@ exports.getCoworkingSpaces = async (req, res, next) => {
 exports.getCoworkingSpace = async (req, res, next) => {
   try {
     const coSpace = await CoworkingSpace.findById(req.params.id);
+    console.log(coSpace);
 
     if (!coSpace) {
       return res.status(400).json({ success: false });
@@ -130,14 +131,20 @@ exports.updateCoworkingSpace = async (req, res, next) => {
 //@access   Public
 exports.deleteCoworkingSpace = async (req, res, next) => {
   try {
-    const coSpace = await CoworkingSpace.findByIdAndDelete(req.params.id);
+    console(req.params.id, "-----req-----");
+    const coSpace = await CoworkingSpace.findById(req.params.id);
+    console(coSpace, "----------------");
 
-    if (!coSpace) {
-      return res.status(400).json({ success: false });
-    }
-    res
-      .status(200)
-      .json({ success: true, msg: `Delete Coworking Space ${req.params.id}` });
+    if (!coSpace)
+      return res.status(404).json({
+        success: false,
+        message: `Bootcamp not found with id of ${req.params.id}`,
+      });
+
+    console(coSpace, "-----co------");
+    coSpace.remove();
+    console(coSpace, "-----af re------");
+    res.status(200).json({ success: true, data: {} });
   } catch (err) {
     res.status(400).json({ success: false });
   }

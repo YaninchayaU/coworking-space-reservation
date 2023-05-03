@@ -34,6 +34,13 @@ const CoworkingSpaceSchema = new mongoose.Schema(
   }
 );
 
+//Cascade delete reservation when a coworkingSpace is delete
+CoworkingSpaceSchema.pre("remove", async function (next) {
+  console.log(`Reservation being removed from coworkingSpace ${this._id}`);
+  await this.model("Reservation").deleteMany({ coworkingSpace: this._id });
+  next();
+});
+
 CoworkingSpaceSchema.virtual("reservations", {
   ref: "Reservation",
   localField: "_id",
