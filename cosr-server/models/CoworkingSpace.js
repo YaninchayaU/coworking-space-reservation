@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Reservation = require("./Reservation");
 //CoworkingSpace information
 //name, address, telephone number, open-close time
 const CoworkingSpaceSchema = new mongoose.Schema(
@@ -35,9 +36,13 @@ const CoworkingSpaceSchema = new mongoose.Schema(
 );
 
 //Cascade delete reservation when a coworkingSpace is delete
-CoworkingSpaceSchema.pre("remove", async function (next) {
-  console.log(`Reservation being removed from coworkingSpace ${this._id}`);
-  await this.model("Reservation").deleteMany({ coworkingSpace: this._id });
+CoworkingSpaceSchema.pre("deleteOne", async function (next) {
+  console.log(
+    `Reservation being removed from coworkingSpace ${this._conditions._id}`
+  );
+  await Reservation.deleteMany({
+    coworkingSpace: this._conditions._id,
+  });
   next();
 });
 
