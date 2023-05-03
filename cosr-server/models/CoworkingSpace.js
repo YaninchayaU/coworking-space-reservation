@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Reservation = require("./Reservation");
 //CoworkingSpace information
 //name, address, telephone number, open-close time
 const CoworkingSpaceSchema = new mongoose.Schema(
