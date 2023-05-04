@@ -22,7 +22,7 @@ exports.getCoworkingSpaces = async (req, res, next) => {
       (match) => `$${match}`
     );
 
-    query = CoworkingSpace.find(JSON.parse(queryStr));
+    query = CoworkingSpace.find(JSON.parse(queryStr)).populate("reservations");
 
     //Select Fields
     if (req.query.select) {
@@ -65,14 +65,12 @@ exports.getCoworkingSpaces = async (req, res, next) => {
       };
     }
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        count: coSpaces.length,
-        pagination,
-        data: coSpaces,
-      });
+    res.status(200).json({
+      success: true,
+      count: coSpaces.length,
+      pagination,
+      data: coSpaces,
+    });
   } catch (err) {
     res.status(400).json({ success: false, msg: `${err}` });
   }
@@ -84,6 +82,7 @@ exports.getCoworkingSpaces = async (req, res, next) => {
 exports.getCoworkingSpace = async (req, res, next) => {
   try {
     const coSpace = await CoworkingSpace.findById(req.params.id);
+    console.log(coSpace);
 
     if (!coSpace) {
       return res.status(400).json({ success: false });
@@ -132,15 +131,20 @@ exports.updateCoworkingSpace = async (req, res, next) => {
 //@access   Public
 exports.deleteCoworkingSpace = async (req, res, next) => {
   try {
-    const coSpace = await CoworkingSpace.findByIdAndDelete(req.params.id);
+    const coSpace = await CoworkingSpace.findById(req.params.id);
 
-    if (!coSpace) {
-      return res.status(400).json({ success: false });
-    }
-    res
-      .status(200)
-      .json({ success: true, msg: `Delete Coworking Space ${req.params.id}` });
+    if (!coSpace)
+      return res.status(404).json({
+        success: false,
+        message: `Bootcamp not found with id of ${req.params.id}`,
+      });
+    console.log(req.params.id);
+    await CoworkingSpace.deleteOne({ _id: req.params.id });
+
+    coSpace.deleteOne();
+    res.status(200).json({ success: true, data: {} });
   } catch (err) {
-    res.status(400).json({ success: false });
+    console.log(err);
+    res.status(400).json({ success: false, data: err.message });
   }
 };

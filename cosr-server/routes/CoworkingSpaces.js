@@ -5,7 +5,7 @@ const {
   createCoworkingSpaces,
   updateCoworkingSpace,
   deleteCoworkingSpace,
-} = require("../constrollers/CoworkingSpace");
+} = require("../controllers/CoworkingSpace");
 
 //Include other resource routers
 const reservationRouter = require("./reservations");
@@ -14,7 +14,7 @@ const router = express.Router();
 const { protect, authorize } = require("../middleware/auth");
 
 //Re-route into other resource routers
-router.use("/:coWorkingSpaceId/reservations/", reservationRouter);
+router.use("/:coworkingSpaceId/reservations/", reservationRouter);
 
 //add all routes
 router

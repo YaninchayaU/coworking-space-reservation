@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const ReservationSchema = new mongoose.Schema({
-  apptDate: {
+  reserveDate: {
     type: Date,
     required: true,
   },
@@ -10,7 +10,7 @@ const ReservationSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  coworkingspace: {
+  coworkingSpace: {
     type: mongoose.Schema.ObjectId,
     ref: "CoworkingSpace",
     required: true,
