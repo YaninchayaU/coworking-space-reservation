@@ -86,3 +86,57 @@ exports.addReservation = async (req, res, next) => {
     });
   }
 };
+
+//@desc Update reservation
+//@route PUT /api/reservations/:id
+//@access Private
+exports.updateReservation = async (req, res, next) => {
+  try {
+    let reservation = await Reservation.findById(req.params.id);
+    if (!reservation) {
+      return res.status(404).json({
+        success: false,
+        message: `No reservation with the id of ${req.params.id}`,
+      });
+    }
+
+    reservation = await Reservation.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json({
+      success: true,
+      data: reservation,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Cannot update Reservation",
+    });
+  }
+};
+
+//@desc Delete reservation
+//@route DELETE /api/reservations/:id
+//@access Private
+exports.deleteReservation = async (req, res, next) => {
+  try {
+    const reservation = await Reservation.findById(req.params.id);
+    if (!reservation) {
+      return res.status(404).json({
+        success: false,
+        message: `No reservation with the id of ${req.params.id}`,
+      });
+    }
+
+    await reservation.deleteOne();
+    res.status(200).json({ success: true, data: {} });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Cannot delete Reservation",
+    });
+  }
+};
