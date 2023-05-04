@@ -2,6 +2,8 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
+const mongoSanitize = require("express-mongo-sanitize");
+
 //Load env vars
 dotenv.config({ path: "./config/config.env" });
 
@@ -17,6 +19,9 @@ app.use(express.json());
 
 //Cookie parser
 app.use(express.json());
+
+//Sanitize data
+app.use(mongoSanitize());
 
 //Mount routers
 app.use("/cosr/api/CoworkingSpaces", coworkingSpaces);
