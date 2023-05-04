@@ -5,7 +5,7 @@ const {
   createCoworkingSpaces,
   updateCoworkingSpace,
   deleteCoworkingSpace,
-} = require("../constrollers/CoworkingSpace");
+} = require("../controllers/CoworkingSpace");
 
 //Include other resource routers
 const reservationRouter = require("./reservations");
