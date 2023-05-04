@@ -3,6 +3,11 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 const mongoSanitize = require("express-mongo-sanitize");
+const helmet = require("helmet");
+const xss = require("xss-clean");
+const rateLimit = require("express-rate-limit");
+const hpp = require("hpp");
+const cors = require("cors");
 
 //Load env vars
 dotenv.config({ path: "./config/config.env" });
@@ -22,6 +27,25 @@ app.use(express.json());
 
 //Sanitize data
 app.use(mongoSanitize());
+
+//Set security headers
+app.use(helmet());
+
+//Prevent XSS attacks
+app.use(xss());
+
+//Rate Limiting
+const limiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 mins
+  max: 100,
+});
+app.use(limiter);
+
+//Prevent http
+app.use(hpp());
+
+//Enable CORS
+app.use(cors());
 
 //Mount routers
 app.use("/cosr/api/CoworkingSpaces", coworkingSpaces);
